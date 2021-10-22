@@ -32,7 +32,6 @@ public class ToDoController {
 
         return new ResponseEntity<List<ToDo>>(status);
 
-
     }
 
     //Todo: Create a POST Method that creates an item with a status code of 201
@@ -46,13 +45,12 @@ public class ToDoController {
 
         return new ResponseEntity<>(created, status);
 
-
     }
 
     //Todo: Create a PUT Method that updates a status code with 204
 
-    @PutMapping("/updateToDo")
-    public ResponseEntity<Void> updateToDo(@PathVariable("id") Integer id, @RequestBody ToDo toDo){
+    @PutMapping("/updateToDo/{id}")
+    public ResponseEntity<Void> updateToDo(@PathVariable("id") Integer id){
 
         HttpStatus status = HttpStatus.NO_CONTENT;
 
@@ -64,7 +62,7 @@ public class ToDoController {
 
     //Todo: Create a DELETE method that removes the item and returns a status code of 202
 
-    @DeleteMapping("/deleteToDo")
+    @DeleteMapping("/deleteToDo/{id}")
     public ResponseEntity<ToDo> deleteToDoById(@PathVariable("id") Integer id){
 
         HttpStatus status = HttpStatus.ACCEPTED;
@@ -72,7 +70,6 @@ public class ToDoController {
         toDoService.remove(id);
 
         return new ResponseEntity<>(status);
-
 
     }
 

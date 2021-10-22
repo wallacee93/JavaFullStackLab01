@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -35,7 +36,6 @@ public class ToDoControllerTest {
 
     @BeforeEach
     void setup(){
-        // creating a clean container to put data in
         this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
 
@@ -47,7 +47,7 @@ public class ToDoControllerTest {
         toDoList.add(ToDo.builder("Practice Code Problems"));
         toDoList.add(ToDo.builder("Sleep , Sleep, Sleep"));
 
-        BDDMockito.given(toDoService.getAll()).willReturn(toDoList);
+        BDDMockito.given(toDoService.getAll()).willReturn((ArrayList<ToDo>) toDoList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/todos/allToDos"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -63,19 +63,19 @@ public class ToDoControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/todos/createToDo")
                         .contentType(MediaType.APPLICATION_JSON)
-                .content(JSONUtil.toJson(todo)
+                .content("{\"text\": \"Look more into SpringBoot\"}"))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.text", CoreMatchers.is("Look more into SpringBoot")));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.text", CoreMatchers.is("Brush Up On Spring")));
     }
 
     @Test
-    public void updateToDoTest() throws Exception{
+    public void updateToDoTest() throws Exception {
 
         ToDo toDo = ToDo.builder("Watch Videos");
 
-        BDDMockito.given(toDoService.toggleComplete(toDo.getId())).willReturn(toDo));
+        BDDMockito.given(toDoService.toggleComplete(1)).willReturn(toDo);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/todos/all/updateToDo")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/todos/all/updateToDo/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JSONUtil.toJson(toDo)))
                 .andExpect(MockMvcResultMatchers.status().isNoContent())
@@ -87,7 +87,7 @@ public class ToDoControllerTest {
 
         ToDo toDo = ToDo.builder("Read Chapter One");
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/todos/all/deleteToDo"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/todos/deleteToDo/1"))
                 .andExpect(MockMvcResultMatchers.status().isAccepted())
                 .andReturn();
     }
