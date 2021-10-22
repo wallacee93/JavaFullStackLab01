@@ -76,8 +76,7 @@ public class ToDoControllerTest {
         BDDMockito.given(toDoService.toggleComplete(1)).willReturn(toDo);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/todos/all/updateToDo/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JSONUtil.toJson(toDo)))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNoContent())
                 .andReturn();
     }
